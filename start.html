@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Irasshaimase</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: url('images/gunung.jpg') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .start-container {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .profile-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        h1 {
+            margin-bottom: 12px;
+            font-size: 22px;
+            color: #333;
+        }
+        
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 24px;
+        }
+        
+        button {
+            background-color: #00bcd4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #0097a7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="snow"></canvas>
+
+    <div class="start-container">
+        <div class="profile-img">
+            <img src="images/hai.jpg" alt="Icon" />
+        </div>
+        <h1>Hi, My Favorite Person! 👋</h1>
+        <p>I just want to say something first...</p>
+        <button onclick="location.href='hal1.html'">Start</button>
+    </div>
+
+    <audio id="start-audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" preload="auto" loop></audio>
+
+    <script>
+        const audio = document.getElementById('start-audio');
+        window.onload = () => {
+            audio.play().catch(() => {
+                const izin = confirm("Klik OK untuk memutar musik pembuka.");
+                if (izin) audio.play();
+            });
+        };
+
+        // Snowfall effect
+        const canvas = document.getElementById("snow");
+        const ctx = canvas.getContext("2d");
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        const snowflakes = [];
+
+        function createSnowflakes(count) {
+            for (let i = 0; i < count; i++) {
+                snowflakes.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    radius: Math.random() * 3 + 1,
+                    speedY: Math.random() * 1 + 0.5,
+                    speedX: Math.random() * 0.5 - 0.25
+                });
+            }
+        }
+
+        function drawSnowflakes() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "white";
+            ctx.beginPath();
+            for (const flake of snowflakes) {
+                ctx.moveTo(flake.x, flake.y);
+                ctx.arc(flake.x, flake.y, flake.radius, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            moveSnowflakes();
+        }
+
+        function moveSnowflakes() {
+            for (const flake of snowflakes) {
+                flake.y += flake.speedY;
+                flake.x += flake.speedX;
+                if (flake.y > height || flake.x < 0 || flake.x > width) {
+                    flake.y = 0;
+                    flake.x = Math.random() * width;
+                }
+            }
+        }
+
+        function animate() {
+            drawSnowflakes();
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener("resize", () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        createSnowflakes(100);
+        animate();
+    </script>
+
+</body>
+
+</html>
